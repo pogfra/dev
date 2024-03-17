@@ -1,0 +1,73 @@
+version: '3.3'
+
+networks:
+  dev:
+    name: dev
+    driver: bridge
+
+services:
+
+  # reverse-proxy
+  # web ui: https://traefik.dev.local
+  traefik:
+    image: traefik:2.9.1
+    container_name: traefik
+    restart: unless-stopped
+    networks:
+      - dev
+    ports:
+      - 80:80 # http
+      - 443:443 # https
+      - 3000:3000 # node
+      - 3307:3306 # mysql (tcp)
+      - 8080:8080 # web ui
+    volumes:
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+      - ./conf/traefik-static.yml:/traefik.yml:ro
+      - ./data/traefik/:/dynamic/:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      traefik.http.routers.traefik.entrypoints: https
+      traefik.http.routers.traefik.rule: Host(`traefik.dev.local`)
+      traefik.http.routers.traefik.tls: true
+      traefik.http.services.traefik.loadbalancer.server.port: 8080
+
+  # mysql database
+  # connect with client on localhost:3307 (root:root)
+  # connect from a container on mysql:3306 (root:root)
+  mysql:
+    image: mariadb:10.6.5
+    container_name: mysql
+    restart: unless-stopped
+    networks:
+      - dev
+    volumes:
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+      - /var/lib/mysql/:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    labels:
+      traefik.tcp.routers.mysql.entrypoints: mysql
+      traefik.tcp.routers.mysql.rule: HostSNI(`*`)
+
+  # mail catcher
+  # web ui: https://mailhog.dev.local
+  # mailhog:
+  #   image: mailhog/mailhog:v1.0.1
+  #   container_name: mailhog
+  #   restart: unless-stopped
+  #   networks:
+  #     - dev
+  #   ports:
+  #     - 1025:1025 # smtp
+  #     - 8025:8025 # web
+  #   # volumes:
+  #   #   - /etc/timezone:/etc/timezone:ro
+  #   #   - /etc/localtime:/etc/localtime:ro
+  #   labels:
+  #     traefik.http.routers.mailhog.entrypoints: https
+  #     traefik.http.routers.mailhog.rule: Host(`mailhog.dev.local`)
+  #     traefik.http.routers.mailhog.tls: true
+  #     traefik.http.services.mailhog.loadbalancer.server.port: 8025
