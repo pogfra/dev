@@ -1,10 +1,9 @@
-# Serveurs de développement (Traefik/MariaDB/MailHog)
+# Serveurs de développement (Traefik/MariaDB)
 
 Ce projet permet l'installation d'un environnement de développement basé sur docker.
 
 - [Treafik](https://doc.traefik.io/traefik/) est reverse-proxy supportant le montage automatisé des images docker, le routage web/tcp/udp par domaine, et le support ssl.
 - [MariaDB](https://mariadb.org/) est le serveur de base de données relationnelles, fork open-source de MySQL.
-- [MailHog](https://github.com/mailhog/MailHog) est un outil de test d'e-mail qui permet d'installer et de configurer très facilement un serveur d'e-mail local, utilisé lors du développement pour ne pas envoyer réellement les mails.
 
 ## 1. Installation de dnsmasq
 
@@ -81,7 +80,6 @@ docker-compose down
 ```
 
 - Traefik  : https://traefik.dev.local/
-- MailHog : https://mailhog.dev.local/
 - MariaDB :
     - depuis un client local (sequel, dbeaver,...) : `localhost:3307` ou `127.0.0.1:3307`
   	  

@@ -13,6 +13,8 @@ prune: # Remove containers and volumes
 	@docker compose down -v $(filter-out $@,$(MAKECMDGOALS))
 shell:
 	@docker compose exec app /bin/bash
+shell-root:
+	@docker compose exec -u 0:0 app /bin/bash
 logs:
 	@docker compose logs -f
 

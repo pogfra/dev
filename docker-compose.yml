@@ -49,23 +49,3 @@ services:
     labels:
       traefik.tcp.routers.mysql.entrypoints: mysql
       traefik.tcp.routers.mysql.rule: HostSNI(`*`)
-
-  # mail catcher
-  # web ui: https://mailhog.dev.local
-  # mailhog:
-  #   image: mailhog/mailhog:v1.0.1
-  #   container_name: mailhog
-  #   restart: unless-stopped
-  #   networks:
-  #     - dev
-  #   ports:
-  #     - 1025:1025 # smtp
-  #     - 8025:8025 # web
-  #   # volumes:
-  #   #   - /etc/timezone:/etc/timezone:ro
-  #   #   - /etc/localtime:/etc/localtime:ro
-  #   labels:
-  #     traefik.http.routers.mailhog.entrypoints: https
-  #     traefik.http.routers.mailhog.rule: Host(`mailhog.dev.local`)
-  #     traefik.http.routers.mailhog.tls: true
-  #     traefik.http.services.mailhog.loadbalancer.server.port: 8025
